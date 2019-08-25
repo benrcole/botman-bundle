@@ -50,6 +50,7 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->append($this->addTelegramConfiguration())
                         ->append($this->addFacebookConfiguration())
+                        ->append($this->addRCSConfiguration())
                     ->end()
                 ->end()
                 ->append($this->addHttpNode())
@@ -117,6 +118,34 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+            ->end()
+        ;
+
+        return $node;
+    }
+    
+    private function  addRCSConfiguration(): NodeDefinition
+    {
+        $treeBuilder = new TreeBuilder();
+        $node = $treeBuilder->root('rcs');
+        $node
+            ->children()
+            ->scalarNode('class')
+            ->defaultValue(RCSDriver::class)
+            ->validate()
+            ->ifTrue(function ($v) {
+                return !\is_subclass_of($v, RCSDriver::class);
+            })
+            ->thenInvalid('Class \'%s\' must be a valid RCS BotMan driver.')
+            ->end()
+            ->end()
+
+            ->arrayNode('parameters')
+            ->isRequired()
+            ->children()
+            ->scalarNode('token')->isRequired()->cannotBeEmpty()->end()
+            ->end()
+            ->end()
             ->end()
         ;
 
