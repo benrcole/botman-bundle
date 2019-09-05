@@ -24,8 +24,9 @@ class RCSContentMessageWithSuggestedChipList extends RCSMessage
      * @JMS\SerializedName("suggestedChipList")
      * @return array
      */
-    public function getSuggestions(){
-            return ['suggestions'=>$this->getSuggestedChipList()];
+    public function getSuggestions()
+    {
+        return ['suggestions'=>$this->getSuggestedChipList()];
     }
 
     /**
@@ -44,12 +45,13 @@ class RCSContentMessageWithSuggestedChipList extends RCSMessage
         $this->suggestedChipList = $suggestedChipList;
     }
 
-    public function addReplySuggestion(Reply $action){
+    public function addReplySuggestion(Reply $action)
+    {
         $this->suggestedChipList[]=['reply'=>$action];
     }
 
-    public function addActionSuggestion(Action $action){
+    public function addActionSuggestion(Action $action)
+    {
         $this->suggestedChipList[]=['action'=>$action];
-
     }
 }

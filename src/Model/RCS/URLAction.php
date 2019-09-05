@@ -25,8 +25,9 @@ class URLAction extends Action
         $this->openUrl=["openUrl"=>["url"=>$url]];
         $this->displayText=$displayText;
         $this->fallbackUrl=$fallbackUrl;
-        if($postData)
+        if ($postData) {
             $this->postback=['data'=>$postData];
+        }
     }
 }
 

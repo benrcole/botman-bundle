@@ -29,22 +29,23 @@ class RCSHandler implements SubscribingHandlerInterface
 
     public function deserializeMessageContactFromJson(JsonDeserializationVisitor $visitor, $contactAsArray, array $type, Context $context)
     {
-        if(array_key_exists('userContact',$contactAsArray))
+        if (array_key_exists('userContact', $contactAsArray)) {
             return new UserContact($contactAsArray['userContact']);
-        elseif(array_key_exists('botContact',$contactAsArray))
+        } elseif (array_key_exists('botContact', $contactAsArray)) {
             return new UserContact($contactAsArray['botContact']);
-        else
+        } else {
             throw new \Exception("Dont know how to deserialize this");
+        }
     }
 
     public function deserializeMessageContentFromJson(JsonDeserializationVisitor $visitor, $contentAsArray, array $type, Context $context)
     {
-        if(array_key_exists('textMessage',$contentAsArray)) {
+        if (array_key_exists('textMessage', $contentAsArray)) {
             $visitor->getCurrentObject()->setTextMessage($contentAsArray['textMessage']);
-        }
-        elseif(array_key_exists('botContact',$contentAsArray))
+        } elseif (array_key_exists('botContact', $contentAsArray)) {
             return new UserContact($contentAsArray['botContact']);
-        else
+        } else {
             throw new \Exception("Dont know how to deserialize this");
+        }
     }
 }

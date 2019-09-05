@@ -28,12 +28,13 @@ class MapAction extends Action
     {
         $this->displayText=$displayText;
         $this->fallbackUrl=$fallbackUrl;
-        if($postData)
+        if ($postData) {
             $this->postback=['data'=>$postData];
-
+        }
     }
 
-    public function setQuery($query){
+    public function setQuery($query)
+    {
         $this->mapAction=[
             'showLocation'=>[
                 'location'=>[
@@ -43,7 +44,8 @@ class MapAction extends Action
         ];
     }
 
-    public function setLocation($lat,$long,$label){
+    public function setLocation($lat, $long, $label)
+    {
         $this->mapAction=[
             'showLocation'=>[
                 'location'=>[

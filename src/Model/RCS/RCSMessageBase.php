@@ -3,8 +3,7 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
-class RCSMessageBase  extends RCSMessage
+class RCSMessageBase extends RCSMessage
 {
     private $msgId;
     /**

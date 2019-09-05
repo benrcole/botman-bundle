@@ -3,7 +3,6 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 use JMS\Serializer\Annotation as JMS;
 
 class GeolocationPushMessage
@@ -45,9 +44,4 @@ class GeolocationPushMessage
      * @JMS\Type("integer")
      */
     private $radius;
-
-
-
-
-
 }

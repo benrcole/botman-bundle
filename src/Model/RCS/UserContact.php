@@ -3,9 +3,7 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 use JMS\Serializer\Annotation as JMS;
-
 
 class UserContact extends MessageContact
 {
@@ -15,5 +13,4 @@ class UserContact extends MessageContact
      * @JMS\Type("string")
      */
     protected $identifier;
-
 }

@@ -5,7 +5,6 @@ namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
 use JMS\Serializer\Annotation as JMS;
 
-
 /**
  * @JMS\AccessorOrder("custom", custom = {"msgId","isTyping", "timestamp"})
  */

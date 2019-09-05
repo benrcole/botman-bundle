@@ -3,7 +3,6 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 class AudioMessage extends RCSContentMessage
 {
     /**
@@ -97,5 +96,4 @@ class AudioMessage extends RCSContentMessage
         $this->fileName = $fileName;
     }
     private $fileName;
-
 }

@@ -15,7 +15,8 @@ namespace Sgomez\Bundle\BotmanBundle\Services\Http;
 
 use Http\Client\Common\HttpMethodsClient;
 use Sgomez\Bundle\BotmanBundle\Exception\FacebookClientException;
-use function GuzzleHttp\{json_decode, json_encode};
+use function GuzzleHttp\json_decode;
+use function GuzzleHttp\json_encode;
 
 final class FacebookClient
 {

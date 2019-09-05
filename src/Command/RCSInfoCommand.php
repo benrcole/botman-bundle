@@ -53,10 +53,10 @@ class RCSInfoCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $contact = '+447860763727';
 
-        $me = $this->client->sendTextMessage("hello",$contact);
+        $me = $this->client->sendTextMessage("hello", $contact);
 
         $this->client->sendIsTyping($contact);
-        $me = $this->client->sendTextMessageWithSuggestions("hello",$contact);
+        $me = $this->client->sendTextMessageWithSuggestions("hello", $contact);
 
         $me = $this->client->getMe();
         $webhookInfo = $this->client->getWebhookInfo();

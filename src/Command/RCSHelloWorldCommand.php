@@ -52,7 +52,7 @@ class RCSHelloWorldCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $me = $this->client->sendTextMessage("hello",'+447742260083');
+        $me = $this->client->sendTextMessage("hello", '+447742260083');
         $webhookInfo = $this->client->getWebhookInfo();
 
         $io->title('Bot basic information');

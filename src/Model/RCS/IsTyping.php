@@ -3,7 +3,6 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 class IsTyping extends RCSMessage
 {
     public function __construct($status)
@@ -12,5 +11,4 @@ class IsTyping extends RCSMessage
     }
 
     private $status;
-
 }

@@ -78,5 +78,4 @@ class RCSMessageWithContactInfo
     {
         $this->messageContact = $messageContact;
     }
-
 }

@@ -3,7 +3,6 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 class MessageStatus
 {
     private $descr;
@@ -14,5 +13,4 @@ class MessageStatus
     cancelled,
     revoked, failed]
      */
-
 }

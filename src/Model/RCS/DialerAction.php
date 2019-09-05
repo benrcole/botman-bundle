@@ -3,7 +3,6 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -23,9 +22,8 @@ class DialerAction extends Action
     {
         $this->phoneNumber=["dialPhoneNumber"=>['phoneNumber'=>$phoneNumber]];
         $this->displayText=$displayText;
-        if($postData)
+        if ($postData) {
             $this->postback=['data'=>$postData];
+        }
     }
-
-
 }

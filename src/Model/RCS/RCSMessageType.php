@@ -3,7 +3,6 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 class RCSMessageType extends RCSMessage
 {
     private $suggestedResponse;
@@ -13,5 +12,4 @@ class RCSMessageType extends RCSMessage
      * @var RCSContentMessageWithSuggestedChipList
      */
     private $ref;
-
 }

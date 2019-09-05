@@ -125,7 +125,7 @@ class Configuration implements ConfigurationInterface
         return $node;
     }
     
-    private function  addRCSConfiguration(): NodeDefinition
+    private function addRCSConfiguration(): NodeDefinition
     {
         $treeBuilder = new TreeBuilder();
         $node = $treeBuilder->root('rcs');

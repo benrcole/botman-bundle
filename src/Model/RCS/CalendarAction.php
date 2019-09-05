@@ -23,12 +23,13 @@ class CalendarAction extends Action
     {
         $this->displayText=$displayText;
 
-        if($postData)
+        if ($postData) {
             $this->postback=['data'=>$postData];
-
+        }
     }
 
-    public function createEvent(\DateTime $start, \DateTime $stop,string $title, string $description){
+    public function createEvent(\DateTime $start, \DateTime $stop, string $title, string $description)
+    {
         $this->calendarAction=[
             'createCalendarEvent'=>[
                 'startTime'=>$start->format('c'),

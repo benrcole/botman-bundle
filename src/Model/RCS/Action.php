@@ -3,7 +3,6 @@
 
 namespace Sgomez\Bundle\BotmanBundle\Model\RCS;
 
-
 use JMS\Serializer\Annotation as JMS;
 
 class Action
@@ -20,5 +19,4 @@ class Action
      * @JMS\SerializedName("displayText");
      */
     protected $displayText;
-
 }

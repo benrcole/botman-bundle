@@ -19,12 +19,11 @@ class Reply
      */
     private $postback;
 
-    public function __construct($text,$postback=null)
+    public function __construct($text, $postback=null)
     {
         $this->displayText=$text;
-        if($postback)
+        if ($postback) {
             $this->postback=['data'=>$postback];
+        }
     }
-
-
 }
