@@ -20,7 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class RCSInfoCommand extends Command
+class RCSHelloWorldCommand extends Command
 {
     /**
      * @var RCSClient
@@ -40,8 +40,8 @@ class RCSInfoCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('botman:rcs:info')
-            ->setDescription('Retrieve the current values of Telegram bot and its webhook status')
+            ->setName('botman:rcs:hello')
+            ->setDescription('Declares hello to the msisdn provided')
         ;
     }
 
@@ -51,14 +51,8 @@ class RCSInfoCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $io = new SymfonyStyle($input, $output);
-        $contact = '+447860763727';
 
-        $me = $this->client->sendTextMessage("hello",$contact);
-
-        $this->client->sendIsTyping($contact);
-        $me = $this->client->sendTextMessageWithSuggestions("hello",$contact);
-
-        $me = $this->client->getMe();
+        $me = $this->client->sendTextMessage("hello",'+447742260083');
         $webhookInfo = $this->client->getWebhookInfo();
 
         $io->title('Bot basic information');

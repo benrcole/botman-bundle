@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sgomez\Bundle\BotmanBundle\DependencyInjection;
 
 use BotMan\Drivers\Facebook\FacebookDriver;
+use BotMan\Drivers\RCS\RCSDriver;
 use BotMan\Drivers\Telegram\TelegramDriver;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -143,6 +144,8 @@ class Configuration implements ConfigurationInterface
             ->arrayNode('parameters')
             ->isRequired()
             ->children()
+            ->scalarNode('bot_id')->isRequired()->cannotBeEmpty()->end()
+            ->scalarNode('maap_uri')->isRequired()->cannotBeEmpty()->end()
             ->scalarNode('token')->isRequired()->cannotBeEmpty()->end()
             ->end()
             ->end()

@@ -4,20 +4,35 @@
 namespace Sgomez\Bundle\BotmanBundle\Services\Http;
 
 
+use BotMan\BotMan\Messages\Attachments\Contact;
+use Doctrine\Common\Annotations\AnnotationRegistry;
 use Http\Client\Common\HttpMethodsClient;
+use JMS\Serializer\Handler\HandlerRegistry;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
+use JMS\Serializer\Naming\SerializedNameAnnotationStrategy;
+use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerBuilder;
+use Psr\Log\LoggerInterface;
 use Sgomez\Bundle\BotmanBundle\Exception\RCSClientException;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\CalendarAction;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\DialerAction;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\IsTyping;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\MapAction;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\MessageContact;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\RCSContentMessage;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\RCSContentMessageWithSuggestedChipList;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\RCSMessage;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\RCSMessageWithContactInfo;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\Reply;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\TextMessage;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\URLAction;
+use Sgomez\Bundle\BotmanBundle\Model\RCS\UserContact;
 use Sgomez\Bundle\BotmanBundle\Model\Telegram\User;
+use Sgomez\Bundle\BotmanBundle\Serializer\RCSHandler;
+use Symfony\Component\HttpFoundation\Response;
 
 class RCSClient
 {
-
-    //DUNXX1566588043@
-    //"Authorization" : "Bearer 5nwSir3k49bJeZvgTQ6tRA"
-
-//DUNXX1566588043@botplatform.lab.mavenir.com
-    //private const BASE_URI = 'https://botplatform.o2.co.uk/bot/v1/%s@botplatform.o2.co.uk/%s';
-    private const BASE_URI = 'https://maap.rcs.mavenir.com/bot/v1/%s@maap.rcs.mavenir.com/%s';
-
     /**
      * @var HttpMethodsClient
      */
@@ -25,71 +40,75 @@ class RCSClient
     /**
      * @var string
      */
+    private $botId;
+    private $maapAddress;
     private $token;
+    private $logger;
+    /**
+     * @var Serializer
+     */
+    private $serializer;
 
-    public function __construct(HttpMethodsClient $client, string $token)
+    public function __construct(HttpMethodsClient $client, LoggerInterface $logger, string $bot_id, string $maapUrl, string $token)
     {
+        AnnotationRegistry::registerLoader('class_exists');
+
         $this->client = $client;
+        $this->botId = $bot_id;
+        $this->maapAddress = $maapUrl;
         $this->token = $token;
+        $this->logger=$logger;
+        $this->serializer = SerializerBuilder::create()->configureHandlers(function(HandlerRegistry $registry) {
+            $registry->registerSubscribingHandler(new RCSHandler());
+        })->addDefaultHandlers()->build();
+
+
     }
 
-    public function getMe()
+    public function sendIsTyping($contact){
+        $base = new RCSMessageWithContactInfo();
+        $message = new RCSContentMessage();
+        $message->setIsTyping('active');
+        $base->setRcsMessage($message);
+        $base->setMessageContact(new UserContact($contact));
+        //prd($this->serializer->serialize($base,'json'));
+        $this->sendPayload('messages',$this->serializer->serialize($base,'json'));
+    }
+
+
+    public function sendTextMessage($content, $contact){
+
+        $message = new RCSMessageWithContactInfo();
+        $rcsMessage = new RCSContentMessage();
+        $rcsMessage->setTextMessage($content);
+        $message->setRcsMessage($rcsMessage);
+        $message->setMessageContact(new UserContact($contact));
+       return $this->sendPayload($this->buildUrl("messages"),$this->serializer->serialize($message,'json'));
+    }
+    
+
+    private function sendPayload(string $endpoint, ?string $body = null): RCSMessage
     {
-
-//        $payload='{"RCSMessage": {"richcardMessage":{"message": {"generalPurposeCard": {"content": {"description": "A gift for every occasion, impress your loved ones with something unique.",							"suggestions": [{"reply": {"postback": {"data": "CMDShowCatalogue"}, "displayText": "Catalogue"}}, 							{"reply": {"postback": {"data": "CMDShowCart"}, "displayText": "Cart"}},							{"reply": {"postback": {"data": "CMDWelcomeMoreInfo"}, "displayText": "More Information"}}], 							"media": {"mediaUrl": "https://botplatform.o2.co.uk/demo/img/flowerShop/00_Instant_Flora_Logo.jpg", 							"mediaFileSize": 42458, "mediaContentType": "image/jpg", "height": "MEDIUM_HEIGHT"}}, "layout": {"imageAlignment": "TOP", 							"cardOrientation": "VERTICAL"}}}}},							"messageContact": {"userContact": "+447860763727" }}';
-        $data=http_build_query([
-            'scope'=>'botmessage',
-            'grant_type'=>'client_credentials',
-            'client_id'=>'ben.cole@telefonica.com',
-            'client_secret'=>'EiM4I9'
-        ]);
-
         $response = $this->client->post(
-            'https://maap.rcs.mavenir.com/token',
-            ['Content-Type'=>'application/x-www-form-urlencoded;'],
-            $data
+            $this->buildUrl("messages"),
+            ['Content-Type'=>'application/json',
+                'Authorization'=>sprintf('Bearer %s',$this->token)],
+            $body
         );
-        var_dump($response->getReasonPhrase());
-prd($response->getStatusCode());
-        $responseData = \json_decode($response->getBody()->getContents(), true);
+        $this->logger->debug("Request Content: ". $body);
+        $this->logger->debug("res sent: ".$body);
+        $responseData = $response->getBody()->getContents();
+        $this->logger->debug("Response Content: ". $responseData);
+        $this->logger->debug("Response Status: ". $response->getStatusCode());
 
-        prd($responseData);
-
-    }
-
-    public function getWebhookInfo(): array
-    {
-        return $this->sendPayload('getWebhookInfo');
-    }
-
-    public function setWebhook(string $url): array
-    {
-        $body = \json_encode(['url' => $url]) ?: null;
-
-        return $this->sendPayload('setWebhook', $body);
-    }
-
-    public function removeWebhook(): array
-    {
-        return $this->sendPayload('deleteWebhook');
-    }
-
-    private function sendPayload(string $endpoint, ?string $body = null): array
-    {
-        $response = $this->client->post($this->buildUrl($endpoint), ['Content-Type'=>'application/json; charset=utf-8','Authorization'=>'Bearer 5nwSir3k49bJeZvgTQ6tRA'], $body);
-prd($response);
-        $responseData = \json_decode($response->getBody()->getContents(), true);
-        prd($responseData);
-
-        if (200 !== $response->getStatusCode()) {
+        /*if (Response::HTTP_BAD_REQUEST !== $response->getStatusCode()) {
             throw RCSClientException::fromPayload($endpoint, $responseData);
-        }
-
-        return $responseData;
+        }*/
+        return $this->serializer->deserialize($responseData,RCSMessage::class,'json');
     }
 
     private function buildUrl(string $endpoint): string
     {
-        return sprintf(self::BASE_URI, $this->token, $endpoint);
+        return sprintf("https://%s/bot/v1/%s@%s/%s/", $this->maapAddress, $this->botId, $this->maapAddress, $endpoint);
     }
 }

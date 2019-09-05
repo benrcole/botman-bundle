@@ -7,6 +7,9 @@
     <services>
         <service id="botman.driver.rcs.client" class="Sgomez\Bundle\BotmanBundle\Services\Http\RCSClient">
             <argument type="service" id="botman.http_client"/>
+            <argument type="service" id="logger"/>
+            <argument>%botman.driver.rcs.bot_id%</argument>
+            <argument>%botman.driver.rcs.maap_uri%</argument>
             <argument>%botman.driver.rcs.token%</argument>
         </service>
 
